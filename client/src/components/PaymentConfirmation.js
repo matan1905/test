@@ -4,13 +4,13 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete }) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Confirm Your Payment</h2>
-      <ul className="mb-4">
-        {Object.entries(adjustedPayments).map(([email, amount], index) => (
-          <li key={index} className="mb-2">
+      <div className="mb-4">
+        {Object.entries(adjustedPayments).slice(0, 1).map(([email, amount]) => (
+          <p key={email} className="text-lg">
             {email}: ${amount.toFixed(2)}
-          </li>
+          </p>
         ))}
-      </ul>
+      </div>
       <button
         onClick={onPaymentComplete}
         className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
