@@ -1,37 +1,52 @@
 import React, { useState, useEffect } from 'react';
 
 function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete }) {
-  const [adjustments, setAdjustments] = useState({});
+  const [adjustments, setAdjustments] = useState([]);
 
   useEffect(() => {
-    const initialAdjustments = contacts.reduce((acc, contact) => {
-      acc[contact.email[0]] = totalAmount / contacts.length;
-      return acc;
-    }, {});
-    setAdjustments(initialAdjustments);
+    const equalShare = totalAmount / contacts.length;
+    setAdjustments(contacts.map(contact => ({ email: contact.email[0], amount: equalShare })));
   }, [contacts, totalAmount]);
 
-  const handleAdjustment = (email, value) => {
-    setAdjustments({ ...adjustments, [email]: parseFloat(value) });
+  const handleAdjustment = (index, value) => {
+    const newAdjustments = [...adjustments];
+    const diff = value - newAdjustments[index].amount;
+    newAdjustments[index].amount = value;
+    // Distribute the difference among other contacts
+    const otherContactsCount = contacts.length - 1;
+    const distributedDiff = diff / otherContactsCount;
+    newAdjustments.forEach((adj, i) => {
+      if (i !== index) {
+        adj.amount -= distributedDiff;
+      }
+    });
+    setAdjustments(newAdjustments);
   };
 
   const handleSubmit = () => {
-    onAdjustmentComplete(adjustments);
+    const adjustmentObject = adjustments.reduce((acc, adj) => {
+      acc[adj.email] = adj.amount;
+      return acc;
+    }, {});
+    onAdjustmentComplete(adjustmentObject);
   };
 
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Adjust Payments</h2>
-      {contacts.map((contact, index) => (
+      {adjustments.map((adjustment, index) => (
         <div key={index} className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            {contact.name[0]}
+            {contacts[index].name[0]} - ${adjustment.amount.toFixed(2)}
           </label>
           <input
-            type="number"
-            value={adjustments[contact.email[0]] || ''}
-            onChange={(e) => handleAdjustment(contact.email[0], e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            type="range"
+            min="0"
+            max={totalAmount}
+            step="0.01"
+            value={adjustment.amount}
+            onChange={(e) => handleAdjustment(index, parseFloat(e.target.value))}
+            className="mt-1 block w-full"
           />
         </div>
       ))}
