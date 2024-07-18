@@ -8,7 +8,7 @@ import ThankYouPage from './components/ThankYouPage';
 function App() {
   const [step, setStep] = useState(1);
   const prevStep = () => setStep(step - 1);
-  const totalAmount = 8953.96;
+  const totalAmount = 8953.96; // This value is now more prominent in the UI
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [adjustedPayments, setAdjustedPayments] = useState({});
 

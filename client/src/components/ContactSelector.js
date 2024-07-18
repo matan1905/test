@@ -14,7 +14,10 @@ function ContactSelector({ onContactsSelected }) {
 
   const inviteContact = (contact) => {
     setInviteId(contact.id);
-    setShowModal(true);
+    setInvitedContacts(prev => ({ ...prev, [contact.id]: 'inviting' }));
+    setTimeout(() => {
+      setInvitedContacts(prev => ({ ...prev, [contact.id]: true }));
+    }, 2000);
   };
 
   const handleInvite = () => {
@@ -33,13 +36,14 @@ function ContactSelector({ onContactsSelected }) {
               <span className="text-green-500 flex items-center">
                 Invited <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
               </span>
+            ) : invitedContacts[contact.id] === 'inviting' ? (
+              <span className="text-yellow-500">Inviting...</span>
             ) : (
               <button
                 onClick={() => inviteContact(contact)}
-                className={`bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm ${invitedContacts[contact.id] ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary'}`}
-                disabled={invitedContacts[contact.id]}
+                className="bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm hover:bg-secondary"
               >
-                {invitedContacts[contact.id] ? 'Inviting...' : 'Invite'}
+                Invite
               </button>
             )}
           </li>

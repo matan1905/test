@@ -46,7 +46,11 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
             step="0.01"
             value={adjustment.amount}
             onChange={(e) => handleAdjustment(index, parseFloat(e.target.value))}
-            className="mt-1 block w-full"
+            className="mt-1 block w-full appearance-none h-3 rounded-full bg-gray-200"
+            style={{
+              WebkitAppearance: 'none',
+              background: `linear-gradient(to right, #4F46E5 0%, #4F46E5 ${(adjustment.amount / totalAmount) * 100}%, #E5E7EB ${(adjustment.amount / totalAmount) * 100}%, #E5E7EB 100%)`
+            }}
           />
       </div>))}
 

@@ -7,7 +7,7 @@ function Header({ amount, context }) {
         <h1 className="text-4xl font-extrabold mb-4 text-center">Payment Split Demo</h1>
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-2xl font-semibold">Amount: ${amount} USD</p>
+            <p className="text-4xl font-bold">Amount: ${amount} USD</p>
             <p className="text-lg mt-2">{context}</p>
           </div>
           <div className="text-right">
