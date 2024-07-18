@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 
-function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, socket }) {
+function PaymentConfirmation({ adjustedPayments, paidStatus, onPaymentComplete, onBack, socket }) {
     useEffect(() => {
-        const allPaid = Object.values(adjustedPayments).every(amount => amount === 0);
+        const allPaid = Object.values(paidStatus).every(status => status === true);
         console.log(allPaid);
         if (allPaid) {
           socket.emit('allPaymentsMade');
           onPaymentComplete();
         }
-    }, [adjustedPayments]);
+    }, [paidStatus]);
 
   const handlePay = (name) => {
-    socket.emit('updatePaymentStatus', { name, amount: 0 });
+    socket.emit('updatePaymentStatus', { name, amount: adjustedPayments[name] });
 
   };
 
@@ -24,13 +24,13 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, sock
             <p className="text-lg font-medium">{name}</p>
             <div className="flex items-center space-x-4">
               <span className="text-lg font-semibold">${amount.toFixed(2)}</span>
-              {adjustedPayments[name] === 0? (
+              {paidStatus[name] ? (
                 <span className="text-green-500 font-medium">Paid</span>
               ) : (
                 <button
                   onClick={() => handlePay(name)}
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-                  disabled={amount === 0}
+                  disabled={paidStatus[name]}
                 >
                   Pay
                 </button>

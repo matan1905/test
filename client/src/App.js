@@ -6,6 +6,8 @@ import Header from './components/Header';
 import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
+import axios from 'axios';
+  const [paidStatus, setPaidStatus] = useState({});
 
 
 function App() {
@@ -24,14 +26,24 @@ function App() {
     console.log(baseUrl);
     const newSocket = io(baseUrl);
     setSocket(newSocket);
+    // Check if we're on the /pay route
+    if (currentUrl.includes('/pay')) {
+      // Fetch last adjustment and move to payment confirmation
+      axios.get('/api/lastAdjustment')
+        .then(response => {
+          setAdjustedPayments(response.data);
+          setStep(3);
+        })
+        .catch(error => console.error('Error fetching last adjustment:', error));
+    }
     return () => newSocket.close();
   }, []);
   useEffect(() => {
     if (socket) {
       socket.on('paymentStatusUpdated', (data) => {
-        setAdjustedPayments(prevPayments => ({
-          ...prevPayments,
-          [data.name]: data.amount
+        setPaidStatus(prevStatus => ({
+          ...prevStatus,
+          [data.name]: true
         }));
       });
       socket.on('showConfetti', () => {
@@ -53,7 +65,12 @@ function App() {
             <PaymentAdjustment
               contacts={selectedContacts}
               totalAmount={totalAmount}
-              onAdjustmentComplete={(adjustments) => { setAdjustedPayments(adjustments); nextStep(); }}
+              onAdjustmentComplete={(adjustments) => { 
+                setAdjustedPayments(adjustments); 
+                axios.post('/api/lastAdjustment', adjustments)
+                  .then(() => nextStep())
+                  .catch(error => console.error('Error saving last adjustment:', error));
+              }}
               onBack={prevStep}
               socket={socket}
             />
@@ -61,6 +78,7 @@ function App() {
           {step === 3 && (
             <PaymentConfirmation
               adjustedPayments={adjustedPayments}
+              paidStatus={paidStatus}
               onPaymentComplete={nextStep}
               onBack={prevStep}
               socket={socket}

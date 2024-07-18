@@ -5,6 +5,17 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const http = require('http');
 // Socket.io
+// Store last used adjustment
+let lastAdjustment = {};
+// API route to get last adjustment
+app.get('/api/lastAdjustment', (req, res) => {
+  res.json(lastAdjustment);
+});
+// API route to set last adjustment
+app.post('/api/lastAdjustment', (req, res) => {
+  lastAdjustment = req.body;
+  res.json({ message: 'Last adjustment updated successfully' });
+});
 
 
 
