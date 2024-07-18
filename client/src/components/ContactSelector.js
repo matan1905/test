@@ -47,6 +47,7 @@ function ContactSelector({ onContactsSelected }) {
       if (contact) {
         setContacts(prevContacts => [...prevContacts, contact]);
       }
+      handleInvite();
     } catch (err) {
       console.error('Error selecting contacts:', err);
     }
