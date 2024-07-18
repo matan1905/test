@@ -31,12 +31,11 @@ function App() {
       socket.on('paymentStatusUpdated', (data) => {
         setAdjustedPayments(prevPayments => ({
           ...prevPayments,
-          [data.username]: data.amount
+          [data.name]: data.amount
         }));
       });
       socket.on('showConfetti', () => {
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
         setStep(4); // Move to ThankYouPage
       });
     }
@@ -45,7 +44,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background font-sans flex flex-col">
-      {showConfetti && <Confetti />}
+       <Confetti  run={showConfetti} numberOfPieces={500} recycle={false} />
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
@@ -64,6 +63,7 @@ function App() {
               adjustedPayments={adjustedPayments}
               onPaymentComplete={nextStep}
               onBack={prevStep}
+              socket={socket}
             />
           )}
           {step === 4 && <ThankYouPage />}

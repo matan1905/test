@@ -17,6 +17,7 @@ io.on('connection', (socket) => {
   console.log('A user connected');
 
   socket.on('updatePaymentStatus', (data) => {
+    console.log('paymentStatusUpdated', data);
     io.emit('paymentStatusUpdated', data);
   });
   socket.on('allPaymentsMade', () => {
@@ -26,6 +27,8 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 });
+
+
 app.use(cors());
 app.use(express.json());
 
