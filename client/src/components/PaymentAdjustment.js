@@ -38,6 +38,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
         <div key={index} className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
             {contacts[index].name} - ${adjustment.amount.toFixed(2)}
+            </label>
           <div className="relative">
             <input
               type="range"
@@ -52,12 +53,8 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
                 background: `linear-gradient(to right, #4F46E5 0%, #4F46E5 ${(adjustment.amount / totalAmount) * 100}%, #E5E7EB ${(adjustment.amount / totalAmount) * 100}%, #E5E7EB 100%)`
               }}
             />
-            <div 
-              className="absolute w-4 h-4 bg-white border-2 border-primary rounded-full -mt-1 transform -translate-x-1/2"
-              style={{ left: `${(adjustment.amount / totalAmount) * 100}%`, top: '50%' }}
-            ></div>
+
           </div>
-          />
       </div>))}
 
       <div className="flex justify-between">

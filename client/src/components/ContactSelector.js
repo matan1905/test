@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
-  const [canUseContacts, setCanUseContacts] = useState(false);
-  useEffect(() => {
-    if ('contacts' in navigator && 'select' in navigator.contacts) {
-      setCanUseContacts(true);
-    }
-  }, []);
+
+
+
+
+function ContactSelector({ onContactsSelected }) {
+  const canUseContacts = 'contacts' in navigator && 'select' in navigator.contacts
+
+  const [contacts, setContacts] = useState([
+    { name: 'Matan Ellhayani', id: 'matan' },
+    { name: 'itamar hay', id: 'itamar' },
+    { name: 'Plony Almony', id: 'plony' }
+  ]);
+  const [invitedContacts, setInvitedContacts] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [inviteId, setInviteId] = useState('');
   const handleSelectContacts = async () => {
     try {
       const properties = ['name', 'email', 'tel'];
@@ -23,15 +32,6 @@ import Modal from './Modal';
   };
 
 
-function ContactSelector({ onContactsSelected }) {
-  const [contacts, setContacts] = useState([
-    { name: 'Matan Ellhayani', id: 'matan' },
-    { name: 'itamar hay', id: 'itamar' },
-    { name: 'Plony Almony', id: 'plony' }
-  ]);
-  const [invitedContacts, setInvitedContacts] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [inviteId, setInviteId] = useState('');
 
   const inviteContact = (contact) => {
     setInviteId(contact.id);
