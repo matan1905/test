@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Modal from './Modal';
 
 function ContactSelector({ onContactsSelected }) {
   const [contacts, setContacts] = useState([
@@ -6,36 +7,33 @@ function ContactSelector({ onContactsSelected }) {
     { name: ['itamar hay'], email: ['itamar@example.com'] },
     { name: ['Plony Almony'], email: ['plony@example.com'] }
   ]);
+  const [showModal, setShowModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
 
-  const addContact = async () => {
-    if ("contacts" in navigator && "ContactsManager" in window) {
-      try {
-        const selectedContacts = await navigator.contacts.select(['name', 'email'], { multiple: true });
-        setContacts([...contacts, ...selectedContacts]);
-      } catch (error) {
-        console.error('Error selecting contacts:', error);
-      }
-    } else {
-      const name = prompt('Enter contact name:');
-      const email = prompt('Enter contact email:');
-      if (name && email) {
-        setContacts([...contacts, { name: [name], email: [email] }]);
-      }
-    }
+  const inviteContact = (contact) => {
+    setInviteEmail(contact.email[0]);
+    setShowModal(true);
+  };
+
+  const handleInvite = () => {
+    // Here you would typically send an invitation to the email address
+    console.log(`Invitation sent to ${inviteEmail}`);
+    setShowModal(false);
   };
 
   return (
     <div>
-      <button
-        onClick={addContact}
-        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors mb-4"
-      >
-        Add Contacts
-      </button>
+      <h2 className="text-xl font-semibold mb-4">Select Contacts</h2>
       <ul className="space-y-2">
         {contacts.map((contact, index) => (
-          <li key={index} className="bg-gray-100 p-2 rounded-md">
-            {contact.name[0]} - {contact.email[0]}
+          <li key={index} className="bg-gray-100 p-2 rounded-md flex justify-between items-center">
+            <span>{contact.name[0]} - {contact.email[0]}</span>
+            <button
+              onClick={() => inviteContact(contact)}
+              className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 transition-colors text-sm"
+            >
+              Invite
+            </button>
           </li>
         ))}
       </ul>
@@ -45,6 +43,23 @@ function ContactSelector({ onContactsSelected }) {
       >
         Next
       </button>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <h3 className="text-lg font-semibold mb-2">Invite Contact</h3>
+        <p>Enter the phone number for {inviteEmail}:</p>
+        <input
+          type="tel"
+          className="mt-2 w-full p-2 border rounded"
+          placeholder="Phone number"
+        />
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleInvite}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Send Invite
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
