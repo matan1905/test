@@ -18,10 +18,8 @@ function ContactSelector({ onContactsSelected }) {
   };
 
   const handleInvite = () => {
-    setTimeout(() => {
-      setInvitedContacts(prev => ({ ...prev, [inviteId]: true }));
-      setShowModal(false);
-    }, 1000);
+    setInvitedContacts(prev => ({ ...prev, [inviteId]: true }));
+    setShowModal(false);
   };
 
   return (
@@ -38,9 +36,10 @@ function ContactSelector({ onContactsSelected }) {
             ) : (
               <button
                 onClick={() => inviteContact(contact)}
-                className="bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors text-sm"
+                className={`bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm ${invitedContacts[contact.id] ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary'}`}
+                disabled={invitedContacts[contact.id]}
               >
-                Invite
+                {invitedContacts[contact.id] ? 'Inviting...' : 'Invite'}
               </button>
             )}
           </li>
@@ -54,11 +53,11 @@ function ContactSelector({ onContactsSelected }) {
       </button>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <h3 className="text-lg font-semibold mb-2">Invite Contact</h3>
-        <p>Enter the phone number for this contact:</p>
+        <p>Enter the username for this contact:</p>
         <input
-          type="tel"
+          type="text"
           className="mt-2 w-full p-2 border rounded"
-          placeholder="Phone number"
+          placeholder="Username"
         />
         <div className="mt-4 flex justify-end">
           <button
