@@ -11,7 +11,7 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, sock
     }, [adjustedPayments]);
 
   const handlePay = (name) => {
-    socket.emit('updatePaymentStatus', { name, amount: 0 });
+    socket.emit('updatePaymentStatus', { name, amount: adjustedPayments[name] });
 
   };
 

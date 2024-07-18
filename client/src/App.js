@@ -18,12 +18,17 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => {
     const currentUrl = window.location.href;
-    // extract the relevant part of the url
     const urlParts = currentUrl.split('/');
     const baseUrl = urlParts.slice(0, urlParts.length - 1).join('/');
     console.log(baseUrl);
     const newSocket = io(baseUrl);
     setSocket(newSocket);
+    
+    const path = window.location.pathname;
+    if (path === '/pay') {
+      setStep(3);  // Move directly to PaymentConfirmation
+    }
+    
     return () => newSocket.close();
   }, []);
   useEffect(() => {
