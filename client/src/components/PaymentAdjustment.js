@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete }) {
+function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack }) {
   const [adjustments, setAdjustments] = useState([]);
 
   useEffect(() => {
@@ -48,9 +48,17 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete }) {
             onChange={(e) => handleAdjustment(index, parseFloat(e.target.value))}
             className="mt-1 block w-full"
           />
-        </div>
+      </div>
+    </div>
       ))}
-      <button
+      <div className="flex justify-between">
+        <button
+          onClick={onBack}
+          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors"
+        >
+          Back
+        </button>
+        <button
         onClick={handleSubmit}
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
       >

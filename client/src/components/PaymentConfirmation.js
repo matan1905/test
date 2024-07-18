@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PaymentConfirmation({ adjustedPayments, onPaymentComplete }) {
+function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Confirm Your Payment</h2>
@@ -11,7 +11,15 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete }) {
           </p>
         ))}
       </div>
-      <button
+    </div>
+      <div className="flex justify-between">
+        <button
+          onClick={onBack}
+          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors"
+        >
+          Back
+        </button>
+        <button
         onClick={onPaymentComplete}
         className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
       >
