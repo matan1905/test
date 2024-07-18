@@ -9,17 +9,30 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
   }, [contacts, totalAmount]);
 
   const handleAdjustment = (index, value) => {
-    const newAdjustments = [...adjustments];
-    const diff = value - newAdjustments[index].amount;
-    newAdjustments[index].amount = value;
-    // Distribute the difference among other contacts
-    const otherContactsCount = contacts.length - 1;
-    const distributedDiff = diff / otherContactsCount;
-    newAdjustments.forEach((adj, i) => {
-      if (i !== index) {
-        adj.amount = Math.max(0, adj.amount - distributedDiff);
+    const newAdjustments = adjustments.map((adj, i) => {
+      if (i === index) {
+        return { ...adj, amount: value };
       }
+      return adj;
     });
+    
+    const totalAdjusted = newAdjustments.reduce((sum, adj) => sum + adj.amount, 0);
+    const diff = totalAmount - totalAdjusted;
+    
+    if (diff !== 0) {
+      const otherAdjustments = newAdjustments.filter((_, i) => i !== index);
+      const otherTotal = otherAdjustments.reduce((sum, adj) => sum + adj.amount, 0);
+      
+      if (otherTotal > 0) {
+        const factor = (otherTotal + diff) / otherTotal;
+        newAdjustments.forEach((adj, i) => {
+          if (i !== index) {
+            adj.amount = Math.max(0, adj.amount * factor);
+          }
+        });
+      }
+    }
+    
     setAdjustments(newAdjustments);
   };
 
