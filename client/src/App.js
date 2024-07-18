@@ -4,10 +4,10 @@ import Header from './components/Header';
 import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
-  const prevStep = () => setStep(step - 1);
 
 function App() {
   const [step, setStep] = useState(1);
+  const prevStep = () => setStep(step - 1);
   const totalAmount = 8953.96;
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [adjustedPayments, setAdjustedPayments] = useState({});
