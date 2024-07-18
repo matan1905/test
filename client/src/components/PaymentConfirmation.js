@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 function PaymentConfirmation({ adjustedPayments, paidStatus, onPaymentComplete, onBack, socket }) {
     useEffect(() => {
-        const allPaid = Object.values(paidStatus).every(status => status === true);
-        console.log(allPaid);
+        const values = Object.values(paidStatus);
+        const allPaid =values.length>2 && values.every(status => status === true);
         if (allPaid) {
           socket.emit('allPaymentsMade');
           onPaymentComplete();

@@ -7,11 +7,11 @@ import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
 import axios from 'axios';
-  const [paidStatus, setPaidStatus] = useState({});
 
 
 function App() {
   const [step, setStep] = useState(1);
+  const [paidStatus, setPaidStatus] = useState({});
   const prevStep = () => setStep(step - 1);
   const totalAmount = 8953.96; // This value is now more prominent in the UI
   const [selectedContacts, setSelectedContacts] = useState([]);
