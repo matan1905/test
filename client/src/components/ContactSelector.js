@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
 function ContactSelector({ onContactsSelected }) {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState([
+    { name: ['Matan Ellhayani'], email: ['matan@example.com'] },
+    { name: ['itamar hay'], email: ['itamar@example.com'] },
+    { name: ['Plony Almony'], email: ['plony@example.com'] }
+  ]);
 
   const addContact = async () => {
     if ("contacts" in navigator && "ContactsManager" in window) {
@@ -12,7 +16,11 @@ function ContactSelector({ onContactsSelected }) {
         console.error('Error selecting contacts:', error);
       }
     } else {
-      alert('Contact picker is not supported in this browser.');
+      const name = prompt('Enter contact name:');
+      const email = prompt('Enter contact email:');
+      if (name && email) {
+        setContacts([...contacts, { name: [name], email: [email] }]);
+      }
     }
   };
 
