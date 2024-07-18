@@ -17,7 +17,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
     const distributedDiff = diff / otherContactsCount;
     newAdjustments.forEach((adj, i) => {
       if (i !== index) {
-        adj.amount -= distributedDiff;
+        adj.amount = Math.max(0, adj.amount - distributedDiff);
       }
     });
     setAdjustments(newAdjustments);
