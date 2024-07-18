@@ -1,6 +1,7 @@
 FROM node:14 as frontend
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
+RUN npm install
 RUN npm ci
 COPY frontend .
 RUN npm run build
