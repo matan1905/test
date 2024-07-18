@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
+function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, socket }) {
   const [paymentStatuses, setPaymentStatuses] = useState({});
 
   useEffect(() => {
@@ -17,6 +17,13 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
       ...prevStatuses,
       [username]: 'Paid'
     }));
+    socket.emit('updatePaymentStatus', { username, amount: adjustedPayments[username] });
+    // Check if all payments are made
+    const allPaid = Object.values(paymentStatuses).every(status => status === 'Paid');
+    if (allPaid) {
+      socket.emit('allPaymentsMade');
+      onPaymentComplete();
+    }
   };
 
   return (
@@ -39,7 +46,15 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
                   Pay
                 </button>
               )}
-            </div>
+      </div>
+      {Object.values(paymentStatuses).every(status => status === 'Paid') && (
+        <button
+          onClick={onPaymentComplete}
+          className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors mt-4 w-full"
+        >
+          Complete Payment
+        </button>
+      )}
           </div>
         ))}
       </div>
