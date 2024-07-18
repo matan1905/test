@@ -4,7 +4,7 @@ function ContactSelector({ onContactsSelected }) {
   const [contacts, setContacts] = useState([]);
 
   const addContact = async () => {
-    if ('contacts' in navigator && 'select' in navigator.contacts) {
+    if ("contacts" in navigator && "ContactsManager" in window) {
       try {
         const selectedContacts = await navigator.contacts.select(['name', 'email'], { multiple: true });
         setContacts([...contacts, ...selectedContacts]);
