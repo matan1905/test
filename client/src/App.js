@@ -9,7 +9,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`/api/split?amount=${amount}&people=${people}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL || ''}/api/split?amount=${amount}&people=${people}`);
       setSplitAmount(response.data.splitAmount);
     } catch (error) {
       console.error('Error calculating split:', error);

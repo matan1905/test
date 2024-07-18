@@ -1,7 +1,6 @@
 # Use an official Node runtime as the base image
 FROM node:20
 
-# Install client dependencies and build the React app
 # Set the working directory in the container
 WORKDIR /app
 
@@ -14,6 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Install client dependencies and build the React app
+RUN cd client && npm install && npm run build
 
 # Expose the port the app runs on
 EXPOSE 5000
