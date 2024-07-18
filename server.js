@@ -4,9 +4,17 @@ const path = require('path');
 const { Server } = require('socket.io');
 const http = require('http');
 // Socket.io
+
+
+
+const PORT = process.env.PORT || 5000;
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 io.on('connection', (socket) => {
   console.log('A user connected');
-  
+
   socket.on('updatePaymentStatus', (data) => {
     io.emit('paymentStatusUpdated', data);
   });
@@ -14,12 +22,6 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 });
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-const PORT = process.env.PORT || 5000;
-
 app.use(cors());
 app.use(express.json());
 

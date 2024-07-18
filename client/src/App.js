@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import ContactSelector from './components/ContactSelector';
 import Header from './components/Header';
 import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
+
+
+function App() {
+  const [step, setStep] = useState(1);
+  const prevStep = () => setStep(step - 1);
+  const totalAmount = 8953.96; // This value is now more prominent in the UI
+  const [selectedContacts, setSelectedContacts] = useState([]);
+  const [adjustedPayments, setAdjustedPayments] = useState({});
   const [socket, setSocket] = useState(null);
   useEffect(() => {
-    const newSocket = io('http://localhost:5000');
+    const currentUrl = window.location.href;
+    // extract the relevant part of the url
+    const urlParts = currentUrl.split('/');
+    const baseUrl = urlParts.slice(0, urlParts.length - 1).join('/');
+    console.log(baseUrl);
+    const newSocket = io(baseUrl);
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);
@@ -21,14 +34,6 @@ import ThankYouPage from './components/ThankYouPage';
       });
     }
   }, [socket]);
-
-function App() {
-  const [step, setStep] = useState(1);
-  const prevStep = () => setStep(step - 1);
-  const totalAmount = 8953.96; // This value is now more prominent in the UI
-  const [selectedContacts, setSelectedContacts] = useState([]);
-  const [adjustedPayments, setAdjustedPayments] = useState({});
-
   const nextStep = () => setStep(step + 1);
 
   return (
