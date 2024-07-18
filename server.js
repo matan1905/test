@@ -9,9 +9,6 @@ let lastAdjustment = {};
 // API route to get last adjustment
 let paidStatus = {};
 // API route to get paid status
-app.get('/api/paidStatus', (req, res) => {
-  res.json(paidStatus);
-});
 
 
 
@@ -49,7 +46,11 @@ app.get('/api/lastAdjustment', (req, res) => {
 // API route to set last adjustment
 app.post('/api/lastAdjustment', (req, res) => {
   lastAdjustment = req.body;
+  paidStatus = {};
   res.json({ message: 'Last adjustment updated successfully' });
+});
+app.get('/api/paidStatus', (req, res) => {
+  res.json(paidStatus);
 });
 
 // API routes

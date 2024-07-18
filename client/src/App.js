@@ -35,14 +35,14 @@ function App() {
           setStep(3);
         })
         .catch(error => console.error('Error fetching last adjustment:', error));
-    }
-  return () => newSocket.close();
-  // Fetch paid status
-  axios.get('/api/paidStatus')
+    axios.get('/api/paidStatus')
     .then(response => {
       setPaidStatus(response.data);
     })
     .catch(error => console.error('Error fetching paid status:', error));
+    }
+  return () => newSocket.close();
+
   }, []);
   useEffect(() => {
     if (socket) {

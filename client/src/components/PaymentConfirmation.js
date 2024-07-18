@@ -39,7 +39,6 @@ function PaymentConfirmation({ adjustedPayments, paidStatus, onPaymentComplete, 
           </div>
         ))}
       </div>
-      {Object.values(paidStatus).every(status => !status) && (
         <div className="flex justify-between mt-8">
           <button
             onClick={onBack}
@@ -48,7 +47,6 @@ function PaymentConfirmation({ adjustedPayments, paidStatus, onPaymentComplete, 
             Back
           </button>
         </div>
-      )}
     </div>
   );
 }
