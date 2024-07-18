@@ -1,8 +1,23 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { Server } = require('socket.io');
+const http = require('http');
+// Socket.io
+io.on('connection', (socket) => {
+  console.log('A user connected');
+  
+  socket.on('updatePaymentStatus', (data) => {
+    io.emit('paymentStatusUpdated', data);
+  });
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
@@ -24,6 +39,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
