@@ -11,7 +11,6 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
           </p>
         ))}
       </div>
-    </div>
       <div className="flex justify-between">
         <button
           onClick={onBack}
@@ -26,6 +25,7 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
         Pay
       </button>
     </div>
+      </div>
   );
 }
 

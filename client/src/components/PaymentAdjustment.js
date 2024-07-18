@@ -48,9 +48,8 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
             onChange={(e) => handleAdjustment(index, parseFloat(e.target.value))}
             className="mt-1 block w-full"
           />
-      </div>
-    </div>
-      ))}
+      </div>))}
+
       <div className="flex justify-between">
         <button
           onClick={onBack}
@@ -64,6 +63,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
       >
         Next
       </button>
+    </div>
     </div>
   );
 }
