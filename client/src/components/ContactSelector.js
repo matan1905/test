@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
-  const [invitedContacts, setInvitedContacts] = useState({});
+
 
 function ContactSelector({ onContactsSelected }) {
   const [contacts, setContacts] = useState([
@@ -8,6 +8,7 @@ function ContactSelector({ onContactsSelected }) {
     { name: 'itamar hay', id: 'itamar' },
     { name: 'Plony Almony', id: 'plony' }
   ]);
+  const [invitedContacts, setInvitedContacts] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [inviteId, setInviteId] = useState('');
 
