@@ -1,5 +1,26 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
+  const [canUseContacts, setCanUseContacts] = useState(false);
+  useEffect(() => {
+    if ('contacts' in navigator && 'select' in navigator.contacts) {
+      setCanUseContacts(true);
+    }
+  }, []);
+  const handleSelectContacts = async () => {
+    try {
+      const properties = ['name', 'email', 'tel'];
+      const selectedContacts = await navigator.contacts.select(properties, { multiple: true });
+      const newContacts = selectedContacts.map((contact, index) => ({
+        name: contact.name[0] || `Contact ${index + 1}`,
+        id: `contact-${index}`,
+        email: contact.email[0],
+        tel: contact.tel[0]
+      }));
+      setContacts(prevContacts => [...prevContacts, ...newContacts]);
+    } catch (err) {
+      console.error('Error selecting contacts:', err);
+    }
+  };
 
 
 function ContactSelector({ onContactsSelected }) {
@@ -28,6 +49,14 @@ function ContactSelector({ onContactsSelected }) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Select Contacts</h2>
+      {canUseContacts && (
+        <button
+          onClick={handleSelectContacts}
+          className="mb-4 bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm hover:bg-secondary"
+        >
+          Select from device contacts
+        </button>
+      )}
       <ul className="space-y-2">
         {contacts.map((contact, index) => (
           <li key={index} className="bg-gray-100 p-4 rounded-md flex justify-between items-center">
