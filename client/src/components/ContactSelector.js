@@ -15,21 +15,7 @@ function ContactSelector({ onContactsSelected }) {
   const [invitedContacts, setInvitedContacts] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [inviteId, setInviteId] = useState('');
-  const handleSelectContacts = async () => {
-    try {
-      const properties = ['name', 'email', 'tel'];
-      const selectedContacts = await navigator.contacts.select(properties, { multiple: true });
-      const newContacts = selectedContacts.map((contact, index) => ({
-        name: contact.name[0] || `Contact ${index + 1}`,
-        id: `contact-${index}`,
-        email: contact.email[0],
-        tel: contact.tel[0]
-      }));
-      setContacts(prevContacts => [...prevContacts, ...newContacts]);
-    } catch (err) {
-      console.error('Error selecting contacts:', err);
-    }
-  };
+
 
 
 
@@ -46,17 +32,29 @@ function ContactSelector({ onContactsSelected }) {
     setShowModal(false);
   };
 
+  const handleSelectContacts = async () => {
+    try {
+      const properties = ['name', 'email', 'tel'];
+      const selectedContacts = await navigator.contacts.select(properties, { multiple: true });
+      const newContacts = selectedContacts.map((contact, index) => ({
+        name: contact.name[0] || `Contact ${index + 1}`,
+        id: `contact-${index}`,
+        email: contact.email[0],
+        tel: contact.tel[0]
+      }));
+      // find the contact and set the tel number
+      const contact = contacts.find(c => c.id === newContacts[0].id);
+      if (contact) {
+        setContacts(prevContacts => [...prevContacts, contact]);
+      }
+    } catch (err) {
+      console.error('Error selecting contacts:', err);
+    }
+  };
+
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Select Contacts</h2>
-      {canUseContacts && (
-        <button
-          onClick={handleSelectContacts}
-          className="mb-4 bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm hover:bg-secondary"
-        >
-          Select from device contacts
-        </button>
-      )}
       <ul className="space-y-2">
         {contacts.map((contact, index) => (
           <li key={index} className="bg-gray-100 p-4 rounded-md flex justify-between items-center">
@@ -89,16 +87,30 @@ function ContactSelector({ onContactsSelected }) {
       </button>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <h3 className="text-lg font-semibold mb-2">Invite Contact</h3>
-        <p>Enter their phone number:</p>
+
+        {canUseContacts && (
+            <div className={"flex flex-col items-center"}>
+            <button
+                onClick={handleSelectContacts}
+                className="mb-4 bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm hover:bg-secondary font-semibold"
+            >
+              Select from device contacts
+            </button>
+              <span>
+                or
+              </span>
+              </div>
+        )}
+        <p className={"text-center mt-2"}>Enter their phone number</p>
         <input
-          type="tel"
-          className="mt-2 w-full p-2 border rounded"
-          placeholder="Phone Number"
+            type="tel"
+            className="mt-2 w-full p-2 border rounded"
+            placeholder="Phone Number"
         />
         <div className="mt-4 flex justify-end">
           <button
-            onClick={handleInvite}
-            className="bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors"
+              onClick={handleInvite}
+              className="bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors"
           >
             Send Invite
           </button>
