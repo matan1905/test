@@ -3,7 +3,7 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend .
-RUN npm run build
+RUN npm run build --verbose
 
 FROM python:3.9
 WORKDIR /app
