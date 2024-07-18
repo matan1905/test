@@ -5,9 +5,9 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
     <div>
       <h2 className="text-xl font-semibold mb-4">Confirm Your Payment</h2>
       <div className="mb-4">
-        {Object.entries(adjustedPayments).slice(0, 1).map(([email, amount]) => (
-          <p key={email} className="text-lg">
-            {email}: ${amount.toFixed(2)}
+        {Object.entries(adjustedPayments).map(([username, amount]) => (
+          <p key={username} className="text-lg">
+            {username}: ${amount.toFixed(2)}
           </p>
         ))}
       </div>

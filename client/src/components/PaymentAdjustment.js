@@ -5,7 +5,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
 
   useEffect(() => {
     const equalShare = totalAmount / contacts.length;
-    setAdjustments(contacts.map(contact => ({ email: contact.email[0], amount: equalShare })));
+    setAdjustments(contacts.map(contact => ({ username: contact.name, amount: equalShare })));
   }, [contacts, totalAmount]);
 
   const handleAdjustment = (index, value) => {
@@ -25,7 +25,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
 
   const handleSubmit = () => {
     const adjustmentObject = adjustments.reduce((acc, adj) => {
-      acc[adj.email] = adj.amount;
+      acc[adj.username] = adj.amount;
       return acc;
     }, {});
     onAdjustmentComplete(adjustmentObject);
