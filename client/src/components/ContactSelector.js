@@ -14,14 +14,14 @@ function ContactSelector({ onContactsSelected }) {
 
   const inviteContact = (contact) => {
     setInviteId(contact.id);
-    setInvitedContacts(prev => ({ ...prev, [contact.id]: 'inviting' }));
-    setTimeout(() => {
-      setInvitedContacts(prev => ({ ...prev, [contact.id]: true }));
-    }, 2000);
+    setShowModal(true);
   };
 
   const handleInvite = () => {
-    setInvitedContacts(prev => ({ ...prev, [inviteId]: true }));
+    setInvitedContacts(prev => ({ ...prev, [inviteId]: 'inviting' }));
+    setTimeout(() => {
+      setInvitedContacts(prev => ({ ...prev, [inviteId]: 'invited' }));
+    }, 1000);
     setShowModal(false);
   };
 
@@ -32,20 +32,23 @@ function ContactSelector({ onContactsSelected }) {
         {contacts.map((contact, index) => (
           <li key={index} className="bg-gray-100 p-4 rounded-md flex justify-between items-center">
             <span className="text-lg">{contact.name}</span>
-            {invitedContacts[contact.id] ? (
-              <span className="text-green-500 flex items-center">
-                Invited <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-              </span>
-            ) : invitedContacts[contact.id] === 'inviting' ? (
-              <span className="text-yellow-500">Inviting...</span>
-            ) : (
+            {invitedContacts[contact.id] ? (invitedContacts[contact.id] === 'inviting' ? (
+                <span className="text-yellow-500">Inviting...
+                </span>
+                        ) : (
+                            <span className="text-green-500 flex items-center">
+                              Invited <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            </span>
+                          )
+                        )
+            :
               <button
                 onClick={() => inviteContact(contact)}
                 className="bg-primary text-white px-4 py-2 rounded-md transition-colors text-sm hover:bg-secondary"
               >
                 Invite
               </button>
-            )}
+            }
           </li>
         ))}
       </ul>
