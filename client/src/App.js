@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import Confetti from 'react-confetti';
 import ContactSelector from './components/ContactSelector';
 import Header from './components/Header';
 import PaymentAdjustment from './components/PaymentAdjustment';
@@ -14,6 +15,7 @@ function App() {
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [adjustedPayments, setAdjustedPayments] = useState({});
   const [socket, setSocket] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => {
     const currentUrl = window.location.href;
     // extract the relevant part of the url
@@ -32,12 +34,18 @@ function App() {
           [data.username]: data.amount
         }));
       });
+      socket.on('showConfetti', () => {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
+        setStep(4); // Move to ThankYouPage
+      });
     }
   }, [socket]);
   const nextStep = () => setStep(step + 1);
 
   return (
     <div className="min-h-screen bg-background font-sans flex flex-col">
+      {showConfetti && <Confetti />}
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
