@@ -4,7 +4,6 @@ import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
 import Header from './components/Header';
-import ContactSelector from './components/ContactSelector';
 import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
