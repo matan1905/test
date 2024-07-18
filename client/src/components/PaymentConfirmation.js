@@ -39,14 +39,16 @@ function PaymentConfirmation({ adjustedPayments, paidStatus, onPaymentComplete, 
           </div>
         ))}
       </div>
-      <div className="flex justify-between mt-8">
-        <button
-          onClick={onBack}
-          className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
-        >
-          Back
-        </button>
-      </div>
+      {Object.values(paidStatus).every(status => !status) && (
+        <div className="flex justify-between mt-8">
+          <button
+            onClick={onBack}
+            className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+          >
+            Back
+          </button>
+        </div>
+      )}
     </div>
   );
 }

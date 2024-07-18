@@ -7,6 +7,11 @@ const { Server } = require('socket.io');
 // Store last used adjustment
 let lastAdjustment = {};
 // API route to get last adjustment
+let paidStatus = {};
+// API route to get paid status
+app.get('/api/paidStatus', (req, res) => {
+  res.json(paidStatus);
+});
 
 
 
@@ -21,6 +26,7 @@ io.on('connection', (socket) => {
   socket.on('updatePaymentStatus', (data) => {
     console.log('paymentStatusUpdated', data);
     io.emit('paymentStatusUpdated', data);
+    paidStatus[data.name] = true;
   });
   socket.on('allPaymentsMade', () => {
     io.emit('showConfetti');
