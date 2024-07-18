@@ -18,7 +18,7 @@ function App() {
     <div className="min-h-screen bg-background font-sans flex flex-col">
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-2xl">
+        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
           {step === 1 && <ContactSelector onContactsSelected={(contacts) => { setSelectedContacts(contacts); nextStep(); }} />}
           {step === 2 && (
             <PaymentAdjustment

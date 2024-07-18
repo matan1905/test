@@ -53,11 +53,11 @@ function ContactSelector({ onContactsSelected }) {
       </button>
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <h3 className="text-lg font-semibold mb-2">Invite Contact</h3>
-        <p>Enter the username for this contact:</p>
+        <p>Enter their phone number:</p>
         <input
-          type="text"
+          type="tel"
           className="mt-2 w-full p-2 border rounded"
-          placeholder="Username"
+          placeholder="Phone Number"
         />
         <div className="mt-4 flex justify-end">
           <button

@@ -5,7 +5,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
 
   useEffect(() => {
     const equalShare = totalAmount / contacts.length;
-    setAdjustments(contacts.map(contact => ({ username: contact.name, amount: equalShare })));
+    setAdjustments(contacts.map(contact => ({ name: contact.name, amount: equalShare })));
   }, [contacts, totalAmount]);
 
   const handleAdjustment = (index, value) => {
@@ -25,7 +25,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
 
   const handleSubmit = () => {
     const adjustmentObject = adjustments.reduce((acc, adj) => {
-      acc[adj.username] = adj.amount;
+      acc[adj.name] = adj.amount;
       return acc;
     }, {});
     onAdjustmentComplete(adjustmentObject);
@@ -37,7 +37,7 @@ function PaymentAdjustment({ contacts, totalAmount, onAdjustmentComplete, onBack
       {adjustments.map((adjustment, index) => (
         <div key={index} className="mb-4">
           <label className="block text-sm font-medium text-gray-700">
-            {contacts[index].name[0]} - ${adjustment.amount.toFixed(2)}
+            {contacts[index].name} - ${adjustment.amount.toFixed(2)}
           </label>
           <input
             type="range"
