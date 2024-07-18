@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
+import { io } from 'socket.io-client';
 import ContactSelector from './components/ContactSelector';
 import Header from './components/Header';
 import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
+  const [socket, setSocket] = useState(null);
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000');
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, []);
+  useEffect(() => {
+    if (socket) {
+      socket.on('paymentStatusUpdated', (data) => {
+        setAdjustedPayments(prevPayments => ({
+          ...prevPayments,
+          [data.username]: data.amount
+        }));
+      });
+    }
+  }, [socket]);
 
 function App() {
   const [step, setStep] = useState(1);
@@ -26,6 +43,7 @@ function App() {
               totalAmount={totalAmount}
               onAdjustmentComplete={(adjustments) => { setAdjustedPayments(adjustments); nextStep(); }}
               onBack={prevStep}
+              socket={socket}
             />
           )}
           {step === 3 && (
