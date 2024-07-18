@@ -10,8 +10,16 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack }) {
             <p className="text-lg">{username}</p>
             <div>
               <span className="text-lg font-semibold">${amount.toFixed(2)}</span>
-              <span className="ml-2 text-sm text-gray-500">Waiting for payment</span>
-              <button className="ml-2 bg-blue-500 text-white px-2 py-1 rounded text-sm">Pay</button>
+              {paymentStatus[username] === 'Paid' ? (
+                <span className="text-green-500 font-medium">Paid</span>
+              ) : (
+                <button
+                  onClick={() => handlePay(username)}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
+                >
+                  Pay
+                </button>
+              )}
             </div>
           </div>
         ))}
