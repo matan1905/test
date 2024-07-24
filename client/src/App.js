@@ -20,28 +20,27 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => {
     const currentUrl = window.location.href;
-    // extract the relevant part of the url
     const urlParts = currentUrl.split('/');
     const baseUrl = urlParts.slice(0, urlParts.length - 1).join('/');
     console.log(baseUrl);
     const newSocket = io(baseUrl);
     setSocket(newSocket);
-    // Check if we're on the /pay route
+    
     if (currentUrl.includes('/pay')) {
-      // Fetch last adjustment and move to payment confirmation
-      axios.get('/api/lastAdjustment')
-        .then(response => {
-          setPayments(response.data);
-          setStep(3);
-        })
-        .catch(error => console.error('Error fetching last adjustment:', error));
-    axios.get('/api/paidStatus')
-    .then(response => {
-      setPaidStatus(response.data);
-    })
-    .catch(error => console.error('Error fetching paid status:', error));
+      Promise.all([
+        axios.get('/api/lastAdjustment'),
+        axios.get('/api/paidStatus')
+      ]).then(([adjustmentResponse, statusResponse]) => {
+        setPayments(adjustmentResponse.data);
+        setPaidStatus(statusResponse.data);
+        setStep(3);
+      }).catch(error => {
+        console.error('Error fetching data:', error);
+      });
     }
-  return () => newSocket.close();
+    
+    return () => newSocket.close();
+  }, []);
 
   }, []);
   useEffect(() => {
