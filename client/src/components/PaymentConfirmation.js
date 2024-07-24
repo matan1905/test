@@ -23,7 +23,7 @@ function PaymentConfirmation({ adjustedPayments, paidStatus, onPaymentComplete, 
           <div key={selectedPerson} className="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
             <p className="text-lg font-medium">{selectedPerson}</p>
             <div className="flex items-center space-x-4">
-              <span className="text-lg font-semibold">${adjustedPayments[selectedPerson].toFixed(2)}</span>
+<span className="text-lg font-semibold">${adjustedPayments[selectedPerson] ? adjustedPayments[selectedPerson].toFixed(2) : '0.00'}</span>
               {paidStatus[selectedPerson] ? (
                 <span className="text-green-500 font-medium">Paid</span>
               ) : (

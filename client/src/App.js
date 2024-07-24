@@ -69,8 +69,8 @@ function App() {
             setSelectedPerson(person);
             nextStep();
           }} />}
-          {step === 2 && (
-            <PaymentConfirmation
+{step === 2 && selectedPerson && payments[selectedPerson] !== undefined && (
+  <PaymentConfirmation
               adjustedPayments={payments}
               paidStatus={paidStatus}
               onPaymentComplete={() => {
