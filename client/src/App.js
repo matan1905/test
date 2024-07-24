@@ -3,7 +3,6 @@ import { io } from 'socket.io-client';
 import Confetti from 'react-confetti';
 import ContactSelector from './components/ContactSelector';
 import Header from './components/Header';
-import PaymentAdjustment from './components/PaymentAdjustment';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
 import axios from 'axios';
@@ -15,7 +14,7 @@ function App() {
   const prevStep = () => setStep(step - 1);
   const totalAmount = 8953.96; // This value is now more prominent in the UI
   const [selectedContacts, setSelectedContacts] = useState([]);
-  const [adjustedPayments, setAdjustedPayments] = useState({});
+  const [payments, setPayments] = useState({});
   const [socket, setSocket] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => {
@@ -31,7 +30,7 @@ function App() {
       // Fetch last adjustment and move to payment confirmation
       axios.get('/api/lastAdjustment')
         .then(response => {
-          setAdjustedPayments(response.data);
+          setPayments(response.data);
           setStep(3);
         })
         .catch(error => console.error('Error fetching last adjustment:', error));
@@ -66,31 +65,28 @@ function App() {
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
-          {step === 1 && <ContactSelector onContactsSelected={(contacts) => { setSelectedContacts(contacts); nextStep(); }} />}
+          {step === 1 && <ContactSelector onContactsSelected={(contacts) => { 
+            setSelectedContacts(contacts);
+            const equalShare = totalAmount / contacts.length;
+            const newPayments = contacts.reduce((acc, contact) => {
+              acc[contact.name] = equalShare;
+              return acc;
+            }, {});
+            setPayments(newPayments);
+            axios.post('/api/lastAdjustment', newPayments)
+              .then(() => nextStep())
+              .catch(error => console.error('Error saving last adjustment:', error));
+          }} />}
           {step === 2 && (
-            <PaymentAdjustment
-              contacts={selectedContacts}
-              totalAmount={totalAmount}
-              onAdjustmentComplete={(adjustments) => { 
-                setAdjustedPayments(adjustments); 
-                axios.post('/api/lastAdjustment', adjustments)
-                  .then(() => nextStep())
-                  .catch(error => console.error('Error saving last adjustment:', error));
-              }}
-              onBack={prevStep}
-              socket={socket}
-            />
-          )}
-          {step === 3 && (
             <PaymentConfirmation
-              adjustedPayments={adjustedPayments}
+              adjustedPayments={payments}
               paidStatus={paidStatus}
               onPaymentComplete={nextStep}
               onBack={prevStep}
               socket={socket}
             />
           )}
-          {step === 4 && <ThankYouPage />}
+          {step === 3 && <ThankYouPage />}
         </div>
       </div>
     </div>
