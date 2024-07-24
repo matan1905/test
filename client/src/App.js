@@ -6,6 +6,8 @@ import Header from './components/Header';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
 import axios from 'axios';
+import SelectionScreen from './components/SelectionScreen';
+const [selectedRole, setSelectedRole] = useState(null);
 
 
 function App() {
@@ -65,7 +67,11 @@ function App() {
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
-          {step === 1 && <ContactSelector onContactsSelected={(contacts) => { 
+          {step === 1 && <SelectionScreen onRoleSelected={(role) => {
+            setSelectedRole(role);
+            nextStep();
+          }} />}
+          {step === 2 && <ContactSelector onContactsSelected={(contacts) => { 
             setSelectedContacts(contacts);
             const equalShare = totalAmount / contacts.length;
             const newPayments = contacts.reduce((acc, contact) => {
@@ -77,7 +83,7 @@ function App() {
               .then(() => nextStep())
               .catch(error => console.error('Error saving last adjustment:', error));
           }} />}
-          {step === 2 && (
+          {step === 3 && (
             <PaymentConfirmation
               adjustedPayments={payments}
               paidStatus={paidStatus}
@@ -86,7 +92,7 @@ function App() {
               socket={socket}
             />
           )}
-          {step === 3 && <ThankYouPage />}
+          {step === 4 && <ThankYouPage />}
         </div>
       </div>
     </div>

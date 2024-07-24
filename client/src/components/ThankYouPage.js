@@ -8,6 +8,12 @@ function ThankYouPage() {
       </svg>
       <h2 className="text-3xl font-bold mb-4 text-gray-800">Thank You!</h2>
       <p className="text-xl text-gray-600 mb-8">Your payment has been processed successfully.</p>
+      <button
+        onClick={handleShare}
+        className="bg-primary text-white px-6 py-3 rounded-md hover:bg-secondary transition-colors text-lg font-semibold"
+      >
+        Share
+      </button>
     </div>
   );
 }
