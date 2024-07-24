@@ -45,8 +45,7 @@ function App() {
 
   }, []);
 
-  }, []);
-  useEffect(() => {
+ useEffect(() => {
     if (socket) {
       socket.on('paymentStatusUpdated', (data) => {
         setPaidStatus(prevStatus => ({
