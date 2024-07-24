@@ -9,7 +9,7 @@ import axios from 'axios';
 
 
 function App() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [paidStatus, setPaidStatus] = useState({});
   const prevStep = () => setStep(step - 1);
   const totalAmount = 8953.96; // This value is now more prominent in the UI
@@ -65,18 +65,45 @@ function App() {
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
-          {step === 1 && <ContactSelector onContactsSelected={(contacts) => { 
-            setSelectedContacts(contacts);
-            const equalShare = totalAmount / contacts.length;
-            const newPayments = contacts.reduce((acc, contact) => {
-              acc[contact.name] = equalShare;
-              return acc;
-            }, {});
-            setPayments(newPayments);
-            axios.post('/api/lastAdjustment', newPayments)
-              .then(() => nextStep())
-              .catch(error => console.error('Error saving last adjustment:', error));
-          }} />}
+          {step === 0 && (
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Select Your Role</h2>
+              <div className="space-y-4">
+                <button
+                  onClick={() => {
+                    setSelectedRole('organizer');
+                    setStep(1);
+                  }}
+                  className="w-full bg-primary text-white px-6 py-3 rounded-md hover:bg-secondary transition-colors text-lg font-semibold"
+                >
+                  I'm the Organizer
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedRole('participant');
+                    setStep(3);
+                  }}
+                  className="w-full bg-accent text-white px-6 py-3 rounded-md hover:bg-red-600 transition-colors text-lg font-semibold"
+                >
+                  I'm a Participant
+                </button>
+              </div>
+            </div>
+          )}
+          {step === 1 && selectedRole === 'organizer' && (
+            <ContactSelector onContactsSelected={(contacts) => { 
+              setSelectedContacts(contacts);
+              const equalShare = totalAmount / contacts.length;
+              const newPayments = contacts.reduce((acc, contact) => {
+                acc[contact.name] = equalShare;
+                return acc;
+              }, {});
+              setPayments(newPayments);
+              axios.post('/api/lastAdjustment', newPayments)
+                .then(() => nextStep())
+                .catch(error => console.error('Error saving last adjustment:', error));
+            }} />
+          )}
           {step === 2 && (
             <PaymentConfirmation
               adjustedPayments={payments}
@@ -86,7 +113,27 @@ function App() {
               socket={socket}
             />
           )}
-          {step === 3 && <ThankYouPage />}
+          {step === 3 && (
+            <div>
+              <PaymentConfirmation
+                adjustedPayments={payments}
+                paidStatus={paidStatus}
+                onPaymentComplete={nextStep}
+                onBack={prevStep}
+                socket={socket}
+              />
+              <button
+                onClick={() => {
+                  // Implement share functionality here
+                  console.log("Share button clicked");
+                }}
+                className="mt-4 bg-primary text-white px-6 py-3 rounded-md hover:bg-secondary transition-colors text-lg font-semibold"
+              >
+                Share
+              </button>
+            </div>
+          )}
+          {step === 4 && <ThankYouPage />}
         </div>
       </div>
     </div>
