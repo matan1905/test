@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Confetti from 'react-confetti';
-import ContactSelector from './components/ContactSelector';
 import Header from './components/Header';
 import PaymentConfirmation from './components/PaymentConfirmation';
 import ThankYouPage from './components/ThankYouPage';
 import axios from 'axios';
 import SelectionScreen from './components/SelectionScreen';
+import WaitForEveryone from './components/WaitForEveryone';
 
+const Screens = {
+    Identify: 1,
+    Payment: 2,
+    WaitForEveryone: 3,
+    ThankYou: 4
+}
 
 function App() {
   const [step, setStep] = useState(1);
@@ -15,7 +21,11 @@ function App() {
   const prevStep = () => setStep(step - 1);
   const totalAmount = 8953.96; // This value is now more prominent in the UI
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [payments, setPayments] = useState({});
+  const [payments, setPayments] = useState({
+      'Matan Ellhayani': (totalAmount/3).toFixed(2),
+      'itamar hay': (totalAmount/3).toFixed(2),
+      'Plony Almony': (totalAmount/3).toFixed(2)
+  });
   const [socket, setSocket] = useState(null);
     const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => {
@@ -23,7 +33,6 @@ function App() {
     // extract the relevant part of the url
     const urlParts = currentUrl.split('/');
     const baseUrl = urlParts.slice(0, urlParts.length - 1).join('/');
-    console.log(baseUrl);
     const newSocket = io(baseUrl);
     setSocket(newSocket);
     // Check if we're on the /pay route
@@ -67,24 +76,20 @@ function App() {
       <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
-          {step === 1 && <SelectionScreen onPersonSelected={(person) => {
+          {step === Screens.Identify && <SelectionScreen onPersonSelected={(person) => {
             setSelectedPerson(person);
             nextStep();
           }} />}
-{step === 2 && selectedPerson && payments[selectedPerson] !== undefined && (
-  <PaymentConfirmation
-              adjustedPayments={payments}
-              paidStatus={paidStatus}
-              onPaymentComplete={() => {
-                socket.emit('updatePaymentStatus', { name: selectedPerson, amount: payments[selectedPerson] });
-                nextStep();
-              }}
-              onBack={prevStep}
-              socket={socket}
-              selectedPerson={selectedPerson}
+            {step === Screens.Payment && (
+              <PaymentConfirmation
+                  adjustedPayments={payments}
+                  onPaymentComplete={nextStep}
+                  onBack={prevStep}
+                  selectedPerson={selectedPerson}
             />
           )}
-          {step === 3 && <ThankYouPage />}
+            {step === Screens.WaitForEveryone && <WaitForEveryone />}
+          {step === Screens.ThankYou && <ThankYouPage />}
         </div>
       </div>
     </div>
