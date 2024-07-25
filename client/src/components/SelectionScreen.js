@@ -1,12 +1,12 @@
 import React from 'react';
-
-function SelectionScreen({ onPersonSelected }) {
-  const [selectedPerson, setSelectedPerson] = React.useState(null);
-  const people = [
+export const people = [
     { name: 'Matan Ellhayani', id: 'matan' },
     { name: 'itamar hay', id: 'itamar' },
     { name: 'Plony Almony', id: 'plony' }
-  ];
+];
+function SelectionScreen({ onPersonSelected }) {
+  const [selectedPerson, setSelectedPerson] = React.useState(null);
+
       const handlePersonClick = (person) => {
         setSelectedPerson(person);
       };

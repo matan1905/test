@@ -82,13 +82,16 @@ function App() {
           }} />}
             {step === Screens.Payment && (
               <PaymentConfirmation
+                  socket={socket}
                   adjustedPayments={payments}
                   onPaymentComplete={nextStep}
                   onBack={prevStep}
                   selectedPerson={selectedPerson}
             />
           )}
-            {step === Screens.WaitForEveryone && <WaitForEveryone />}
+            {step === Screens.WaitForEveryone && <WaitForEveryone
+
+            />}
           {step === Screens.ThankYou && <ThankYouPage />}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import { people } from './SelectionScreen';
 
 function WaitForEveryone() {
     const [paidStatus, setPaidStatus] = useState({});
@@ -30,7 +31,7 @@ function WaitForEveryone() {
         }
     }, [socket]);
 
-    const allPaid = Object.values(paidStatus).every(status => status === true);
+    const allPaid = people.every(person => !!paidStatus[person.id]);
 
     const handleShare = () => {
         if (navigator.share) {
@@ -47,26 +48,31 @@ function WaitForEveryone() {
     };
 
     return (
-        <div className="space-y-6">
-            <h2 className="text-2xl font-semibold mb-4">Waiting for everyone</h2>
+        <div className="flex flex-col">
+            <div className="flex flex-row justify-between items-center space-x-4 mb-4">
+                <h2 className="text-2xl font-semibold mb-4">Waiting for everyone</h2>
+
+                {!allPaid && (
+                    <button
+                        onClick={handleShare}
+                        className=" text-primary hover:text-secondary transition-colors"
+                    >
+                        Share
+                    </button>
+                )}
+            </div>
+
             <ul className="space-y-2">
-                {Object.entries(paidStatus).map(([name, status]) => (
-                    <li key={name} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
-                        <span>{name}</span>
-                        <span className={`font-semibold ${status ? 'text-green-500' : 'text-yellow-500'}`}>
-                            {status ? 'Paid' : 'Waiting'}
+                {people.map((person) => (
+                    <li key={person.id} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
+                        <span>{person.name}</span>
+                        <span data-paid={!!paidStatus[person.id]} className={`font-semibold data-[paid=true]:text-green-500 data-[paid=false]:text-yellow-500`}>
+                            {paidStatus[person.id] ? 'Paid' : 'Waiting'}
                         </span>
                     </li>
                 ))}
             </ul>
-            {!allPaid && (
-                <button
-                    onClick={handleShare}
-                    className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-secondary transition-colors"
-                >
-                    Share
-                </button>
-            )}
+
         </div>
     );
 }
