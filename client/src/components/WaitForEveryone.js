@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function WaitForEveryone({ paidStatus, people }) {
+function WaitForEveryone({ paidStatus, joinedStatus, people, lastAdjustment }) {
 
     const allPaid = people.every(person => !!paidStatus[person.name]);
 
@@ -36,9 +36,15 @@ function WaitForEveryone({ paidStatus, people }) {
             <ul className="space-y-2">
                 {people.map((person) => (
                     <li key={person.name} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
-                        <span>{person.name}</span>
-                        <span data-paid={!!paidStatus[person.name]} className={`font-semibold data-[paid=true]:text-green-500 data-[paid=false]:text-yellow-500`}>
-                            {paidStatus[person.name] ? 'Paid' : 'Waiting'}
+                        <div className="flex flex-col">
+                            <span>{person.name}</span>
+                            <span className="text-sm text-gray-500">${lastAdjustment[person.name]}</span>
+                        </div>
+                        <span className={`font-semibold ${
+                            paidStatus[person.name] ? 'text-green-500' :
+                            joinedStatus[person.name] ? 'text-blue-500' : 'text-yellow-500'
+                        }`}>
+                            {paidStatus[person.name] ? 'Paid' : (joinedStatus[person.name] ? 'Joined' : 'Not Joined')}
                         </span>
                     </li>
                 ))}

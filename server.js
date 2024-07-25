@@ -17,9 +17,15 @@ const initialState = {
     [demoPeople[2].name]: (8953.96/3).toFixed(2),
   },
   paidStatus: {},
-  people: demoPeople
+  people: demoPeople,
+  joinedStatus: {}
 };
 let state = initialState;
+  socket.on('updateJoinStatus', (data) => {
+    console.log('joinStatusUpdated', data);
+    state.joinedStatus[data.name] = true;
+    io.emit('stateUpdate', state);
+  });
 
 
 // New route to get the entire state
