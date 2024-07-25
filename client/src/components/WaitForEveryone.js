@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 function WaitForEveryone({ paidStatus, people }) {
-                }));
-            });
-        }
-    }, [socket]);
 
-    const allPaid = people.every(person => !!paidStatus[person.id]);
+    const allPaid = people.every(person => !!paidStatus[person.name]);
 
     const handleShare = () => {
         if (navigator.share) {
@@ -39,10 +35,10 @@ function WaitForEveryone({ paidStatus, people }) {
 
             <ul className="space-y-2">
                 {people.map((person) => (
-                    <li key={person.id} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
+                    <li key={person.name} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
                         <span>{person.name}</span>
-                        <span data-paid={!!paidStatus[person.id]} className={`font-semibold data-[paid=true]:text-green-500 data-[paid=false]:text-yellow-500`}>
-                            {paidStatus[person.id] ? 'Paid' : 'Waiting'}
+                        <span data-paid={!!paidStatus[person.name]} className={`font-semibold data-[paid=true]:text-green-500 data-[paid=false]:text-yellow-500`}>
+                            {paidStatus[person.name] ? 'Paid' : 'Waiting'}
                         </span>
                     </li>
                 ))}

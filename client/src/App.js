@@ -25,7 +25,9 @@ function App() {
     totalAmount: 8953.96,
     people: []
   });
-  const [socket, setSocket] = useState(null);
+  console.log(state);
+
+    const [socket, setSocket] = useState(null);
     const [showConfetti, setShowConfetti] = useState(false);
   useEffect(() => {
     const currentUrl = window.location.href;
@@ -34,16 +36,11 @@ function App() {
     const baseUrl = urlParts.slice(0, urlParts.length - 1).join('/');
     const newSocket = io(baseUrl);
     setSocket(newSocket);
-    // Check if we're on the /pay route
-    if (currentUrl.includes('/pay')) {
-      // Fetch last adjustment and move to payment confirmation
-      axios.get('/api/state')
-        .then(response => {
-          setState(response.data);
-          setStep(3);
-        })
-        .catch(error => console.error('Error fetching state:', error));
-    }
+    axios.get('/api/state')
+    .then(response => {
+      setState(response.data);
+    })
+    .catch(error => console.error('Error fetching state:', error));
   return () => newSocket.close();
 
   }, []);

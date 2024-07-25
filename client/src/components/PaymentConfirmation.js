@@ -5,9 +5,10 @@ export default function PaymentConfirmation({ adjustedPayments, onPaymentComplet
     const [showModal, setShowModal] = useState(false);
     const handlePay = () => {
         // Update the payment status in the socket
-        socket.emit('paymentStatusUpdated', { name: selectedPerson, status: 'paid' });
+        socket.emit('updatePaymentStatus', { name: selectedPerson, status: 'paid' });
         onPaymentComplete();
     }
+    console.log(selectedPerson);
   return (
       <>
     <div className="flex flex-col items-center justify-center space-y-8">
