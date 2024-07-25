@@ -3,13 +3,27 @@ const cors = require('cors');
 const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
-// Socket.io
-// Store last used adjustment
-let lastAdjustment = {};
-// API route to get last adjustment
-let paidStatus = {};
-// API route to get paid status
+// Centralized state
+const state = {
+  lastAdjustment: {},
+  paidStatus: {},
+  totalAmount: 8953.96,
+  people: [
+    { name: 'Matan Ellhayani', id: 'matan' },
+    { name: 'itamar hay', id: 'itamar' },
+    { name: 'Plony Almony', id: 'plony' }
+  ]
+};
+// Function to emit state updates to all clients
+function emitStateUpdate(socket) {
+  socket.emit('stateUpdate', state);
+}
+  // Send initial state to the newly connected client
+  emitStateUpdate(socket);
 
+// New route to get the entire state
+app.get('/api/state', (req, res) => {
+  res.json(state);
 
 
 const PORT = process.env.PORT || 5000;
@@ -22,11 +36,13 @@ io.on('connection', (socket) => {
 
   socket.on('updatePaymentStatus', (data) => {
     console.log('paymentStatusUpdated', data);
-    io.emit('paymentStatusUpdated', data);
-    paidStatus[data.name] = true;
-  });
-  socket.on('allPaymentsMade', () => {
-    io.emit('showConfetti');
+    state.paidStatus[data.name] = true;
+    io.emit('stateUpdate', state);
+    
+    // Check if all payments are made
+    if (Object.values(state.paidStatus).every(status => status === true)) {
+      io.emit('showConfetti');
+    }
   });
   socket.on('disconnect', () => {
     console.log('User disconnected');
@@ -41,16 +57,17 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 app.get('/api/lastAdjustment', (req, res) => {
-  res.json(lastAdjustment);
+  res.json(state.lastAdjustment);
 });
 // API route to set last adjustment
 app.post('/api/lastAdjustment', (req, res) => {
-  lastAdjustment = req.body;
-  paidStatus = {};
+  state.lastAdjustment = req.body;
+  state.paidStatus = {};
+  io.emit('stateUpdate', state);
   res.json({ message: 'Last adjustment updated successfully' });
 });
 app.get('/api/paidStatus', (req, res) => {
-  res.json(paidStatus);
+  res.json(state.paidStatus);
 });
 
 // API routes
