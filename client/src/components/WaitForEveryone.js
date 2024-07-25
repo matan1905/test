@@ -1,31 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { io } from 'socket.io-client';
-import { people } from './SelectionScreen';
 
-function WaitForEveryone() {
-    const [paidStatus, setPaidStatus] = useState({});
-    const [socket, setSocket] = useState(null);
-
-    useEffect(() => {
-        const newSocket = io();
-        setSocket(newSocket);
-
-        axios.get('/api/paidStatus')
-            .then(response => {
-                setPaidStatus(response.data);
-            })
-            .catch(error => console.error('Error fetching paid status:', error));
-
-        return () => newSocket.close();
-    }, []);
-
-    useEffect(() => {
-        if (socket) {
-            socket.on('paymentStatusUpdated', (data) => {
-                setPaidStatus(prevStatus => ({
-                    ...prevStatus,
-                    [data.name]: true
+function WaitForEveryone({ paidStatus, people }) {
                 }));
             });
         }
