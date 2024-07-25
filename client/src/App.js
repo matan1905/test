@@ -17,14 +17,14 @@ const Screens = {
 
 function App() {
   const [step, setStep] = useState(1);
-  const [paidStatus, setPaidStatus] = useState({});
   const prevStep = () => setStep(step - 1);
-  const totalAmount = 8953.96; // This value is now more prominent in the UI
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [payments, setPayments] = useState({
-      'Matan Ellhayani': (totalAmount/3).toFixed(2),
-      'itamar hay': (totalAmount/3).toFixed(2),
-      'Plony Almony': (totalAmount/3).toFixed(2)
+  const [state, setState] = useState({
+    lastAdjustment: {},
+    paidStatus: {},
+    totalAmount: 0,
+    context: "",
+    payments: {}
   });
   const [socket, setSocket] = useState(null);
     const [showConfetti, setShowConfetti] = useState(false);
@@ -35,33 +35,22 @@ function App() {
     const baseUrl = urlParts.slice(0, urlParts.length - 1).join('/');
     const newSocket = io(baseUrl);
     setSocket(newSocket);
-    // Check if we're on the /pay route
+  
+  newSocket.on('initialState', (initialState) => {
+    setState(initialState);
     if (currentUrl.includes('/pay')) {
-      // Fetch last adjustment and move to payment confirmation
-      axios.get('/api/lastAdjustment')
-        .then(response => {
-          setPayments(response.data);
-          setStep(3);
-        })
-        .catch(error => console.error('Error fetching last adjustment:', error));
-    axios.get('/api/paidStatus')
-    .then(response => {
-      setPaidStatus(response.data);
-    })
-    .catch(error => console.error('Error fetching paid status:', error));
+      setStep(3);
     }
+  });
+  newSocket.on('stateUpdate', (updatedState) => {
+    setState(updatedState);
+  });
   return () => newSocket.close();
 
   }, []);
 
  useEffect(() => {
     if (socket) {
-      socket.on('paymentStatusUpdated', (data) => {
-        setPaidStatus(prevStatus => ({
-          ...prevStatus,
-          [data.name]: true
-        }));
-      });
       socket.on('showConfetti', () => {
         setShowConfetti(true);
         setStep(4); // Move to ThankYouPage
@@ -73,7 +62,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background font-sans flex flex-col">
        <Confetti  run={showConfetti} numberOfPieces={500} recycle={false} />
-      <Header amount={totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
+    <Header amount={state.totalAmount} context={state.context} />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
           {step === Screens.Identify && <SelectionScreen onPersonSelected={(person) => {
@@ -82,13 +71,13 @@ function App() {
           }} />}
             {step === Screens.Payment && (
               <PaymentConfirmation
-                  adjustedPayments={payments}
+                adjustedPayments={state.payments}
                   onPaymentComplete={nextStep}
                   onBack={prevStep}
                   selectedPerson={selectedPerson}
             />
           )}
-            {step === Screens.WaitForEveryone && <WaitForEveryone />}
+          {step === Screens.WaitForEveryone && <WaitForEveryone paidStatus={state.paidStatus} socket={socket} />}
           {step === Screens.ThankYou && <ThankYouPage />}
         </div>
       </div>

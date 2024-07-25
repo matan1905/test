@@ -3,13 +3,26 @@ const cors = require('cors');
 const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
-// Socket.io
-// Store last used adjustment
-let lastAdjustment = {};
-// API route to get last adjustment
-let paidStatus = {};
-// API route to get paid status
+// Centralized state
+const state = {
+  lastAdjustment: {},
+  paidStatus: {},
+  totalAmount: 8953.96,
+  context: "This is splitting payment for a flight to TLV->LAS and back",
+  payments: {
+    'Matan Ellhayani': 0,
+    'itamar hay': 0,
+    'Plony Almony': 0
+  }
+};
+// Function to update state and broadcast changes
+function updateState(newState) {
+  Object.assign(state, newState);
+  io.emit('stateUpdate', state);
+}
 
+app.get('/api/state', (req, res) => {
+  res.json(state);
 
 
 const PORT = process.env.PORT || 5000;
@@ -20,13 +33,22 @@ const io = new Server(server);
 io.on('connection', (socket) => {
   console.log('A user connected');
 
+  // Send initial state to the connected client
+  socket.emit('initialState', state);
   socket.on('updatePaymentStatus', (data) => {
-    console.log('paymentStatusUpdated', data);
-    io.emit('paymentStatusUpdated', data);
-    paidStatus[data.name] = true;
+    updateState({
+      paidStatus: {
+        ...state.paidStatus,
+        [data.name]: true
+      }
+    });
+    
+    if (Object.values(state.paidStatus).every(status => status)) {
+      io.emit('showConfetti');
+    }
   });
-  socket.on('allPaymentsMade', () => {
-    io.emit('showConfetti');
+  socket.on('updatePayments', (payments) => {
+    updateState({ payments });
   });
   socket.on('disconnect', () => {
     console.log('User disconnected');
@@ -41,16 +63,18 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 app.get('/api/lastAdjustment', (req, res) => {
-  res.json(lastAdjustment);
+  res.json(state.lastAdjustment);
 });
 // API route to set last adjustment
 app.post('/api/lastAdjustment', (req, res) => {
-  lastAdjustment = req.body;
-  paidStatus = {};
+  updateState({
+    lastAdjustment: req.body,
+    paidStatus: {}
+  });
   res.json({ message: 'Last adjustment updated successfully' });
 });
 app.get('/api/paidStatus', (req, res) => {
-  res.json(paidStatus);
+  res.json(state.paidStatus);
 });
 
 // API routes
