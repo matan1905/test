@@ -62,8 +62,7 @@ function App() {
     <div className="min-h-screen bg-background font-sans flex flex-col">
        <Confetti  run={showConfetti} numberOfPieces={500} recycle={false} />
       <Header 
-        amount={state.totalAmount} 
-        context="This is splitting payment for a flight to TLV->LAS and back"
+        amount={state.totalAmount}
         paidStatus={state.paidStatus}
         people={state.people}
       />

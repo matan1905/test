@@ -18,30 +18,32 @@ function SelectionScreen({ onPersonSelected }) {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Select Your Name</h2>
+      <h2 className="text-xl font-semibold mb-4">Please identify yourself</h2>
       <ul className="space-y-2">
         {people.map((person) =>
           <li key={person.name}
               data-selected={selectedPerson?.name === person.name}
-              className={`bg-gray-100 p-4 rounded-md  data-[selected=true]:border-2 data-[selected=true]:border-primary hover:text-primary data-[selected=true]:text-primary transition-colors`}>
-            <button
-              onClick={() => handlePersonClick(person)}
+               onClick={() => handlePersonClick(person)}
+              className={`cursor-pointer bg-gray-100 p-4 rounded-md  data-[selected=true]:border-2 data-[selected=true]:border-primary hover:text-primary data-[selected=true]:text-primary transition-colors`}>
+            <span
+
 
               className={`w-full text-left text-lg  transition-colors`}
             >
               {person.name}
-            </button>
+            </span>
           </li>
         )}
       </ul>
-      {selectedPerson && (
+      {
         <button
           onClick={handleContinue}
+          style={{visibility: selectedPerson ? 'visible' : 'hidden'}}
           className="mt-4 w-full bg-primary text-white py-2 rounded-md hover:bg-secondary transition-colors"
         >
-          Continue as {selectedPerson.name}
+          Continue as {selectedPerson?.name}
         </button>
-      )}
+      }
     </div>
   );
 }

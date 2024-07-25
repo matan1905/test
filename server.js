@@ -9,7 +9,7 @@ const demoPeople = [
     { name: 'itamar hay'},
     { name: 'Plony Almony'}
 ]
-const state = {
+const initialState = {
   totalAmount: 8953.96,
   lastAdjustment: {
     [demoPeople[0].name]: (8953.96/3).toFixed(2),
@@ -19,6 +19,7 @@ const state = {
   paidStatus: {},
   people: demoPeople
 };
+let state = initialState;
 
 
 // New route to get the entire state
@@ -59,6 +60,11 @@ app.get('/api/state', (req, res) => {
   res.json(state);
 });
 
+app.get('/api/reset', (req, res) => {
+  state = initialState;
+  io.emit('stateUpdate', state);
+  res.json({ message: 'State reset successfully' });
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
