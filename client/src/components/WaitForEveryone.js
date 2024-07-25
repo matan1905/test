@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-function WaitForEveryone({ paidStatus, people }) {
+function WaitForEveryone({ status, people }) {
 
-    const allPaid = people.every(person => !!paidStatus[person.name]);
+    const allPaid = people.every(person => status[person.name] === 'paid');
 
     const handleShare = () => {
         if (navigator.share) {
@@ -37,8 +37,8 @@ function WaitForEveryone({ paidStatus, people }) {
                 {people.map((person) => (
                     <li key={person.name} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
                         <span>{person.name}</span>
-                        <span data-paid={!!paidStatus[person.name]} className={`font-semibold data-[paid=true]:text-green-500 data-[paid=false]:text-yellow-500`}>
-                            {paidStatus[person.name] ? 'Paid' : 'Waiting'}
+                        <span data-paid={status[person.name]} className={`font-semibold data-[paid=paid]:text-green-500 data-[paid=joined]:text-yellow-500 text-red-500`}>
+                            {status[person.name] ?? 'Not joined'}
                         </span>
                     </li>
                 ))}

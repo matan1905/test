@@ -11,15 +11,17 @@ const demoPeople = [
 ]
 const initialState = {
   totalAmount: 8953.96,
-  lastAdjustment: {
+  shareToPay: {
     [demoPeople[0].name]: (8953.96/3).toFixed(2),
     [demoPeople[1].name]: (8953.96/3).toFixed(2),
     [demoPeople[2].name]: (8953.96/3).toFixed(2),
   },
-  paidStatus: {},
-  people: demoPeople
+  status: {},
+  people: demoPeople,
+  // Payment deadline - one hour from now
+  payUntil: (new Date(Date.now() + 3600000)).getTime()
 };
-let state = initialState;
+let state = JSON.parse(JSON.stringify(initialState));
 
 
 // New route to get the entire state
@@ -34,13 +36,13 @@ const io = new Server(server);
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('updatePaymentStatus', (data) => {
-    console.log('paymentStatusUpdated', data);
-    state.paidStatus[data.name] = true;
+  socket.on('updateStatus', (data) => {
+    console.log('updateStatus', data);
+    state.status[data.name] = data.status;
     io.emit('stateUpdate', state);
     
     // Check if all payments are made
-    if (demoPeople.every(person => state.paidStatus[person.name])) {
+    if (demoPeople.every(person => state.status[person.name] === 'paid')) {
       io.emit('showConfetti');
     }
   });
@@ -61,7 +63,8 @@ app.get('/api/state', (req, res) => {
 });
 
 app.get('/api/reset', (req, res) => {
-  state = initialState;
+  state = JSON.parse(JSON.stringify(initialState));
+  state.payUntil = (new Date(Date.now() + 3600000)).getTime();
   io.emit('stateUpdate', state);
   res.json({ message: 'State reset successfully' });
 });

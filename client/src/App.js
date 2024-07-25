@@ -20,10 +20,11 @@ function App() {
   const prevStep = () => setStep(step - 1);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [state, setState] = useState({
-    lastAdjustment: {},
-    paidStatus: {},
+    shareToPay: {},
+    status: {},
     totalAmount: 8953.96,
-    people: []
+    people: [],
+    payUntil: (new Date(Date.now() + 3600000)).getTime()
   });
   console.log(state);
 
@@ -63,19 +64,24 @@ function App() {
        <Confetti  run={showConfetti} numberOfPieces={500} recycle={false} />
       <Header 
         amount={state.totalAmount}
-        paidStatus={state.paidStatus}
+        status={state.status}
+        payUntil={state.payUntil}
         people={state.people}
       />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
-          {step === Screens.Identify && <SelectionScreen onPersonSelected={(person) => {
-            setSelectedPerson(person);
-            nextStep();
+          {step === Screens.Identify && <SelectionScreen
+              shareToPay={state.shareToPay}
+              status={state.status}
+              onPersonSelected={(person) => {
+                    setSelectedPerson(person);
+                    nextStep();
+                    socket.emit('updateStatus', { name: person, status: 'joined' });
           }} people={state.people} />}
             {step === Screens.Payment && (
               <PaymentConfirmation
                   socket={socket}
-                  adjustedPayments={state.lastAdjustment}
+                  adjustedPayments={state.shareToPay}
                   onPaymentComplete={nextStep}
                   onBack={prevStep}
                   selectedPerson={selectedPerson}
@@ -83,7 +89,7 @@ function App() {
           )}
             {step === Screens.WaitForEveryone && <WaitForEveryone
 
-              paidStatus={state.paidStatus}
+              status={state.status}
               people={state.people}
             />}
           {step === Screens.ThankYou && <ThankYouPage />}

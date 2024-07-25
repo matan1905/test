@@ -5,23 +5,22 @@ export default function PaymentConfirmation({ adjustedPayments, onPaymentComplet
     const [showModal, setShowModal] = useState(false);
     const handlePay = () => {
         // Update the payment status in the socket
-        socket.emit('updatePaymentStatus', { name: selectedPerson, status: 'paid' });
+        socket.emit('updateStatus', { name: selectedPerson, status: 'paid' });
         onPaymentComplete();
     }
-    console.log(selectedPerson);
   return (
       <>
     <div className="flex flex-col items-center justify-center space-y-8">
-      <h2 className="text-3xl font-semibold">Confirm Your Payment</h2>
+      <h2 className="text-3xl font-semibold">{selectedPerson}</h2>
       <div className="text-center">
-        <p className="text-lg font-medium mb-2">{selectedPerson}</p>
-        <p className="text-5xl font-bold text-primary">${adjustedPayments[selectedPerson]}</p>
+        <p className="text-lg font-medium mb-2">Your share to pay</p>
+        <p className="text-5xl font-bold text-primary">${adjustedPayments[selectedPerson]} USD</p>
       </div>
       <button
         onClick={() => setShowModal(true)}
         className="bg-primary text-white px-8 py-3 rounded-lg text-xl font-semibold hover:bg-secondary transition-colors"
       >
-        Pay Now
+        Pay your share
       </button>
       <button
         onClick={onBack}
