@@ -4,34 +4,26 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, sele
 
   const handlePay = (name) => {
     onPaymentComplete();
-
-  };
-
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold mb-4">Confirm Your Payment</h2>
-      <div className="space-y-4">
-        {[selectedPerson].map((name) => (
-          <div key={name} className="flex justify-between items-center p-4 bg-gray-100 rounded-lg">
-            <p className="text-lg font-medium">{name}</p>
-            <div className="flex items-center space-x-4">
-              <span className="text-lg font-semibold">${adjustedPayments[name]}</span>
-
-                <button
-                  onClick={() => handlePay(name)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-                >
-                  Pay
-                </button>
-
-        </div>
-          </div>
-        ))}
+    <div className="flex flex-col items-center justify-center space-y-8">
+      <h2 className="text-3xl font-semibold">Confirm Your Payment</h2>
+      <div className="text-center">
+        <p className="text-lg font-medium mb-2">{selectedPerson}</p>
+        <p className="text-5xl font-bold text-primary">${adjustedPayments[selectedPerson]}</p>
       </div>
-        <div className="flex justify-between mt-8">
-          <button
-            onClick={onBack}
-            className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+      <button
+        onClick={() => handlePay(selectedPerson)}
+        className="bg-primary text-white px-8 py-3 rounded-lg text-xl font-semibold hover:bg-secondary transition-colors"
+      >
+        Pay Now
+      </button>
+      <button
+        onClick={onBack}
+        className="text-gray-600 hover:text-gray-800 transition-colors"
+      >
+        Back
+      </button>
+    </div>
           >
             Back
           </button>
