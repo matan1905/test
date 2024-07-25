@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, selectedPerson }) {
-
-  const handlePay = (name) => {
-    onPaymentComplete();
+export default function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, selectedPerson }){
+    const handlePay = (name) => {
+        onPaymentComplete();
+    };
   return (
     <div className="flex flex-col items-center justify-center space-y-8">
       <h2 className="text-3xl font-semibold">Confirm Your Payment</h2>
@@ -24,12 +24,5 @@ function PaymentConfirmation({ adjustedPayments, onPaymentComplete, onBack, sele
         Back
       </button>
     </div>
-          >
-            Back
-          </button>
-        </div>
-    </div>
   );
 }
-
-export default PaymentConfirmation;
