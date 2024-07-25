@@ -61,7 +61,12 @@ function App() {
   return (
     <div className="min-h-screen bg-background font-sans flex flex-col">
        <Confetti  run={showConfetti} numberOfPieces={500} recycle={false} />
-      <Header amount={state.totalAmount} context="This is splitting payment for a flight to TLV->LAS and back" />
+      <Header 
+        amount={state.totalAmount} 
+        context="This is splitting payment for a flight to TLV->LAS and back"
+        paidStatus={state.paidStatus}
+        people={state.people}
+      />
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
           {step === Screens.Identify && <SelectionScreen onPersonSelected={(person) => {

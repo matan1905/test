@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Header({ amount, context }) {
+function Header({ amount, context, paidStatus, people }) {
   return (
     <header className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8">
       <div className="container mx-auto">
