@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { SharePhone, ShareEmail, ShareCopyLink } from './ShareComponents';
 
 const tabs = [
     {
@@ -66,9 +67,9 @@ function SharePopup({isOpen, onClose}) {
 
                 </div>
                 <hr className="my-4 w-full"/>
-                {currentTab === 0 && <SharePhone onClose={onClose}/>}
-                {currentTab === 1 && <ShareEmail onClose={onClose}/>}
-                {currentTab === 2 && <ShareCopyLink onClose={onClose}/>}
+                {currentTab === 0 && <SharePhone onClose={onClose} />}
+                {currentTab === 1 && <ShareEmail onClose={onClose} />}
+                {currentTab === 2 && <ShareCopyLink onClose={onClose} />}
 
             </div>
         </div> : null;
