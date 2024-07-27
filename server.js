@@ -11,7 +11,7 @@ const demoPeople = [
 const initialState = {
   totalAmount: 8953.96,
   shareToPay: {
-    [demoPeople[0].name]: (8953.96/3).toFixed(2),
+    [demoPeople[0].name]: (8953.96/2).toFixed(2),
     [demoPeople[1].name]: (8953.96/2).toFixed(2),
   },
   status: {},

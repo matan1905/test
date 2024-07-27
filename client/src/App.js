@@ -74,7 +74,8 @@ function App() {
         }
     }, [socket]);
     const nextStep = () => setStep(step + 1);
-    const allJoined = Object.values(state.status).every(status => status === 'joined' || status === 'paid');
+    const allJoined = Object.values(state.people).every(person => state.status[person.name] === 'paid' || state.status[person.name] === 'joined');
+    console.log(allJoined,'allJoined');
 
     return (
         <div className="min-h-screen bg-background font-sans flex flex-col">
@@ -84,17 +85,18 @@ function App() {
                 status={state.status}
                 payUntil={state.payUntil}
                 people={state.people}
+                 onShare={handleShare}
             />
 
             <div className="flex-grow flex flex-col items-center p-4">
                 {step === Screens.Identify && <div
-                    className="flex shadow-lg bg-white text-primary mb-4 flex-col items-center justify-center space-y-4 py-4  rounded-lg w-1/6">
+                    className="flex shadow-lg bg-white text-primary mb-4 flex-col items-center justify-center space-y-4 py-4  rounded-lg w-1/2">
                     <span className={"text-sm font-bold"}>Your share to pay</span>
                     <p className="text-2xl font-bold">${state.shareToPay[selectedPerson ?? "Matan Ellhayani"]} USD</p>
                 </div>}
 
 
-                {step === Screens.WaitForEveryone && !allJoined && <div
+                  {step === Screens.WaitForEveryone && !allJoined && <div
                     className=" flex shadow-sm bg-amber-100 text-amber-800 mb-4 flex-col items-center justify-center space-y-4 py-4  rounded-lg w-full max-w-7xl">
                     <span className={"text-xl font-bold"}>Not everyone joined yet</span>
                     <button
@@ -117,6 +119,7 @@ function App() {
 
                 <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-7xl">
                     {step === Screens.Identify && <SelectionScreen
+
                         shareToPay={state.shareToPay}
                         status={state.status}
                         onPersonSelected={(person) => {
@@ -140,7 +143,27 @@ function App() {
                     />}
                     {step === Screens.ThankYou && <ThankYouPage/>}
                 </div>
+                {step!== Screens.WaitForEveryone && !allJoined && <div
+                    className=" flex shadow-sm bg-amber-100 text-amber-800 my-4 flex-col items-center justify-center space-y-4 py-4  rounded-lg w-full max-w-7xl">
+                    <span className={"text-xl font-bold"}>Not everyone joined yet</span>
+                    <button
+                        onClick={handleShare}
+                        className="flex flex-row items-center  border-2 border-amber-800 text-amber-800 px-4 py-2 rounded-lg font-semibold hover:border-amber-950 hover:text-amber-950 transition-colors"
+                    >
+                        <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                             stroke="currentColor" className="size-6 mr-2">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                  d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/>
+                        </svg>
+                        <span className={"text-xl font-bold"}>
+                        Share
+
+                        </span>
+
+                    </button>
+                </div>}
             </div>
+
             <SharePopup isOpen={sharePopup} onClose={() => setSharePopup(false)} />
         </div>
     );

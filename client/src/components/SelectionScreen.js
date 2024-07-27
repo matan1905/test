@@ -33,7 +33,7 @@ function SelectionScreen({ onPersonSelected, status,shareToPay }) {
             >
                 <div className={`flex flex-col`}>
                      <span className={`text-lg font-semibold flex items-center`}>
-                         <span className="inline-flex items-center justify-center w-8 h-8 rounded-full mr-2" style={{backgroundColor: getRandomColor()}}>
+                         <span className="inline-flex items-center justify-center w-8 h-8 rounded-full mr-2" style={{backgroundColor: getRandomColor(person.name)}}>
                              <span className="text-white font-bold">{getInitials(person.name)}</span>
                          </span>
                          {person.name}
