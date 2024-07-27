@@ -74,6 +74,7 @@ function App() {
         }
     }, [socket]);
     const nextStep = () => setStep(step + 1);
+    const allJoined = Object.values(state.status).every(status => status === 'joined' || status === 'paid');
 
     return (
         <div className="min-h-screen bg-background font-sans flex flex-col">
@@ -93,7 +94,7 @@ function App() {
                 </div>}
 
 
-                {step === Screens.WaitForEveryone && <div
+                {step === Screens.WaitForEveryone && !allJoined && <div
                     className=" flex shadow-sm bg-amber-100 text-amber-800 mb-4 flex-col items-center justify-center space-y-4 py-4  rounded-lg w-full max-w-7xl">
                     <span className={"text-xl font-bold"}>Not everyone joined yet</span>
                     <button
