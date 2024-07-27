@@ -7,14 +7,12 @@ const { Server } = require('socket.io');
 const demoPeople = [
     { name: 'Matan Ellhayani' },
     { name: 'itamar hay'},
-    { name: 'Plony Almony'}
 ]
 const initialState = {
   totalAmount: 8953.96,
   shareToPay: {
     [demoPeople[0].name]: (8953.96/3).toFixed(2),
-    [demoPeople[1].name]: (8953.96/3).toFixed(2),
-    [demoPeople[2].name]: (8953.96/3).toFixed(2),
+    [demoPeople[1].name]: (8953.96/2).toFixed(2),
   },
   status: {},
   people: demoPeople,
