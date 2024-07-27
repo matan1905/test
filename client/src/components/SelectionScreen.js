@@ -1,4 +1,5 @@
 import React from 'react';
+import { getInitials, getRandomColor } from '../utils/helpers';
 import {default as Tag} from './Tag';
 export const people = [
     { name: 'Matan Ellhayani', id: 'matan' },
@@ -6,7 +7,6 @@ export const people = [
 ];
 function SelectionScreen({ onPersonSelected, status,shareToPay }) {
   const [selectedPerson, setSelectedPerson] = React.useState(null);
-import { getInitials, getRandomColor } from '../utils/helpers';
 
       const handlePersonClick = (person) => {
         setSelectedPerson(person);
