@@ -3,10 +3,10 @@ import {default as Tag} from './Tag';
 export const people = [
     { name: 'Matan Ellhayani', id: 'matan' },
     { name: 'itamar hay', id: 'itamar' },
-    { name: 'Plony Almony', id: 'plony' }
 ];
 function SelectionScreen({ onPersonSelected, status,shareToPay }) {
   const [selectedPerson, setSelectedPerson] = React.useState(null);
+import { getInitials, getRandomColor } from '../utils/helpers';
 
       const handlePersonClick = (person) => {
         setSelectedPerson(person);
@@ -24,7 +24,7 @@ function SelectionScreen({ onPersonSelected, status,shareToPay }) {
         {people.map((person) =>
           <li key={person.name}
               data-selected={selectedPerson?.name === person.name}
-               onClick={() => handlePersonClick(person)}
+               onClick={() => status[person.name] !== 'paid' && handlePersonClick(person)}
               className={`cursor-pointer bg-gray-100 p-4 rounded-md  data-[selected=true]:border-2 data-[selected=true]:border-primary hover:text-primary data-[selected=true]:text-primary transition-colors`}>
             <div
 
@@ -32,7 +32,12 @@ function SelectionScreen({ onPersonSelected, status,shareToPay }) {
               className={`w-full text-left text-lg  flex flex-row items-center transition-colors justify-between`}
             >
                 <div className={`flex flex-col`}>
-                    <span className={`text-lg font-semibold`}>{person.name}</span>
+                     <span className={`text-lg font-semibold flex items-center`}>
+                         <span className="inline-flex items-center justify-center w-8 h-8 rounded-full mr-2" style={{backgroundColor: getRandomColor()}}>
+                             <span className="text-white font-bold">{getInitials(person.name)}</span>
+                         </span>
+                         {person.name}
+                     </span>
                     <span className={`text-xs`}>${shareToPay[person.name]} USD</span>
                   
                 </div>
