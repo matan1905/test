@@ -20,23 +20,24 @@ function Header({ amount, status, people, payUntil }) {
     <header className="bg-primary text-white p-8">
       <div className="container mx-auto">
           <div>
-            <div className={"flex flex-row items-center justify-between"}>
+            <div className={"flex flex-row items-center justify-center"}>
               <img
                   onClick={() => fetch('/api/reset')}
 
-                  src={'/logo.png'} alt="logo" className="w-16 h-16 mr-4" />
-              <p className="text-4xl font-bold">${amount} USD</p>
+                  src={'/logo.png'} alt="logo" className="w-24 h-24 mr-4" />
+
 
             </div>
 
-            <div className="mt-4">
+            <div className="mt-6">
             <div className="w-full bg-white rounded-full h-4 dark:bg-background">
                 <div
                   className="bg-secondary h-4 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
-              <p className="text-sm mt-2 text-center">${ ((paidPeople * amount)/totalPeople).toFixed(2) } / ${amount} USD</p>
+              <p className="text-2xl mt-2 text-center">${ ((paidPeople * amount)/totalPeople).toFixed(2) } out of ${amount} paid</p>
+
             </div>
           </div>
           <div className="flex flex-row w-full justify-center items-center space-x-2 mt-4">
