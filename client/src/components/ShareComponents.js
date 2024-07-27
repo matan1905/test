@@ -3,11 +3,16 @@ import React, { useState } from 'react';
 export function SharePhone({ onClose }) {
     const [countryCode, setCountryCode] = useState('+1');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleShare = () => {
         // Implement phone sharing logic here
         console.log(`Sharing to ${countryCode}${phoneNumber}`);
-        onClose();
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            onClose();
+        }, 1200);
     };
 
     return (
@@ -29,10 +34,11 @@ export function SharePhone({ onClose }) {
                 />
             </div>
             <button
+                disabled={isLoading}
                 onClick={handleShare}
-                className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors"
+                className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors disabled:bg-gray-300"
             >
-                Share via SMS
+                {isLoading ? 'Sharing...' : 'Share via SMS'}
             </button>
         </div>
     );
@@ -40,11 +46,14 @@ export function SharePhone({ onClose }) {
 
 export function ShareEmail({ onClose }) {
     const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleShare = () => {
-        // Implement email sharing logic here
-        console.log(`Sharing to ${email}`);
-        onClose();
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            onClose();
+        }, 1200);
     };
 
     return (
@@ -58,9 +67,10 @@ export function ShareEmail({ onClose }) {
             />
             <button
                 onClick={handleShare}
-                className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors"
+                disabled={isLoading}
+                className="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition-colors disabled:bg-gray-300"
             >
-                Share via Email
+                {isLoading ? 'Sharing...' : 'Share via Email'}
             </button>
         </div>
     );
