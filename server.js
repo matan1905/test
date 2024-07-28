@@ -67,6 +67,19 @@ app.get('/api/reset', (req, res) => {
   res.json({ message: 'State reset successfully' });
 });
 
+app.get('/reset', (req, res) => {
+  state = JSON.parse(JSON.stringify(initialState));
+  state.payUntil = (new Date(Date.now() + 3600000)).getTime();
+  if(req.query.price) {
+    state.totalAmount = parseFloat(req.query.price);
+    state.people.forEach(person => {
+      state.shareToPay[person.name] = (state.totalAmount/state.people.length).toFixed(2);
+    });
+  }
+  io.emit('stateUpdate', state);
+  res.redirect('/');
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
