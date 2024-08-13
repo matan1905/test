@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.geologica {
+    font-family: 'Geologica', sans-serif;
+
+}

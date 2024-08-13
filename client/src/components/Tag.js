@@ -1,18 +1,19 @@
 import React from 'react';
 
 export const colors = {
-    Success: {
-        bg: '#b6ffe3',
-        text: '#27c427'
+     Danger: {
+        bg: '#FFDADA',
+        text: '#FF4C4C'
     },
     Warning: {
-        bg: '#ffe7ac',
-        text: '#be8300'
+        bg: '#FFF7D9',
+        text: '#FFB800'
     },
-    Danger: {
-        bg: '#ff9b9b',
-        text: '#d50000'
-    }
+    Success: {
+        bg: '#BEECD6',
+        text: '#48D97A'
+    },
+
 }
 function Tag({text,color}) {
     return (
