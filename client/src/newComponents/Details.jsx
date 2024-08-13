@@ -10,8 +10,11 @@ function Details({ amount, status, people, payUntil,onShare }) {
     return () => clearInterval(interval);
   }, [timeLeft]);
 
-  const [progress, setProgress] = useState(50);
-    return (
+    const totalPeople = people.length;
+    const paidPeople = Object.values(status).filter(status => status === 'paid').length;
+    const progress = (paidPeople / totalPeople) * 100;
+
+  return (
         <div className={"w-full flex flex-col items-center justify-center pt-8 geologica px-8"}>
             <h1 className={"text-3xl font-semibold geologica"}>Pay together with friends</h1>
             <p className={"text-xl font-light text-gray-400 p-2"}>Invite your friends to join and cover their share</p>
@@ -69,7 +72,7 @@ function Details({ amount, status, people, payUntil,onShare }) {
 
             <div
                 className={"flex flex-col items-center justify-center w-full max-w-3xl mt-4 border-opacity-50 font-light border border-primary p-4 rounded-2xl"}>
-                <span className={"text-2xl font-normal"}>0.00$ out of 3344$ paid</span>
+                <span className={"text-2xl font-normal"}>${((paidPeople * amount) / totalPeople).toFixed(2)} out of ${amount} paid</span>
                 <div className="w-full bg-white rounded-full h-4 mt-4" style={{background: '#B1D5EB'}}>
                     <div
                         className="bg-primary h-4 rounded-full transition-all duration-500 ease-out"

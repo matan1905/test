@@ -42,7 +42,7 @@ function SelectionScreen({ onPersonSelected, status,shareToPay }) {
                      </span>
                     <div className={"flex flex-col"}>
                         <span>  {person.name}</span>
-                        <span className={`text-sm font-light text-gray-400`}>123{shareToPay[person.name]}$</span>
+                        <span className={`text-sm font-light text-gray-400`}>{shareToPay[person.name]}$</span>
 
                     </div>
 
