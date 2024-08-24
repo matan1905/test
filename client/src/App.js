@@ -26,7 +26,8 @@ function App() {
         status: {},
         totalAmount: 8953.96,
         people: [],
-        payUntil: (new Date(Date.now() + 3600000)).getTime()
+        payUntil: (new Date(Date.now() + 3600000)).getTime(),
+        type:'hotel'
     });
 
 
@@ -88,6 +89,7 @@ function App() {
                 payUntil={state.payUntil}
                 people={state.people}
                  onShare={handleShare}
+              type={state.type}
             />
 
 

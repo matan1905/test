@@ -17,7 +17,8 @@ const initialState = {
   status: {},
   people: demoPeople,
   // Payment deadline - one hour from now
-  payUntil: (new Date(Date.now() + 3600000)).getTime()
+  payUntil: (new Date(Date.now() + 3600000)).getTime(),
+  type:'flight'
 };
 let state = JSON.parse(JSON.stringify(initialState));
 
@@ -75,6 +76,9 @@ app.get('/reset', (req, res) => {
     state.people.forEach(person => {
       state.shareToPay[person.name] = (state.totalAmount/state.people.length).toFixed(2);
     });
+  }
+  if(req.query.type) {
+    state.type = req.query.type;
   }
   io.emit('stateUpdate', state);
   res.redirect('/');
